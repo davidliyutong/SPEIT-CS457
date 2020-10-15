@@ -1,6 +1,6 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
-from mininet.node import CPULimitedHost, Host
+from mininet.node import Host
 from mininet.link import TCLink
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel, info
@@ -34,42 +34,36 @@ def perf_test(topo, algorithm=None):
     net = Mininet(topo=topo, host=Host, link=TCLink, autoStaticArp=True)
     net.start()
     if algorithm is not None:
-        custom_flow_control(net)
+        algorithm(net)
 
     info("Dumping host connections\n")
     dumpNodeConnections(net.hosts)
+    dumpNodeConnections(net.switches)
     info("Testing bandwidth between hosts\n")
-    net.iperf((net.getNodeByName('h1'), net.getNodeByName('h2')), l4Type='UDP', seconds=10)
-    net.iperf((net.getNodeByName('h2'), net.getNodeByName('h3')), l4Type='UDP', seconds=10)
-    net.iperf((net.getNodeByName('h3'), net.getNodeByName('h1')), l4Type='UDP', seconds=10)
+    net.iperf((net.getNodeByName('h1'), net.getNodeByName('h2')), l4Type='TCP', seconds=10)
+    net.iperf((net.getNodeByName('h2'), net.getNodeByName('h3')), l4Type='TCP', seconds=10)
+    net.iperf((net.getNodeByName('h3'), net.getNodeByName('h1')), l4Type='TCP', seconds=10)
     net.stop()
 
 
 def ping_test(topo, algorithm=None):
     net = Mininet(topo=topo, host=Host, link=TCLink, autoStaticArp=True)
     net.start()
+    # net.ping((net.getNodeByName('h1'), net.getNodeByName('h2'), net.getNodeByName('h3')))
     if algorithm is not None:
-        custom_flow_control(net)
+        algorithm(net)
 
     info("Dumping host connections\n")
     dumpNodeConnections(net.hosts)
+    dumpNodeConnections(net.switches)
     info("Testing ping\n")
 
-    net.ping((net.getNodeByName('h1'), net.getNodeByName('h2'), net.getNodeByName('h3')))
+    net.ping((net.getNodeByName('h1'), net.getNodeByName('h2'), net.getNodeByName('h3')), timeout=10)
+    net.ping((net.getNodeByName('h1'), net.getNodeByName('h2'), net.getNodeByName('h3')), timeout=10)
     net.stop()
 
 
 def custom_flow_control(net):
-    print("Adding ovs flow rules")
-    quietRun('sudo ovs-ofctl add-flow s3 in_port=2,actions=output:1')
-    quietRun('sudo ovs-ofctl add-flow s3 in_port=3,actions=output:1')
-    quietRun('sudo ovs-ofctl add-flow s3 in_port=1,actions=output:2')
-    quietRun('sudo ovs-ofctl add-flow s2 in_port=2,actions=output:1')
-    quietRun('sudo ovs-ofctl add-flow s2 in_port=3,actions=output:1')
-    quietRun('sudo ovs-ofctl add-flow s2 in_port=1,actions=output:2')
-
-
-def smarter_custom_flow_control(net):
     print("Adding smart ovs flow rules")
     quietRun('sudo ovs-ofctl add-flow s1 dl_dst={},actions=output:1'.format(net.getNodeByName('h1').MAC()))
     quietRun('sudo ovs-ofctl add-flow s1 dl_dst={},actions=output:2'.format(net.getNodeByName('h2').MAC()))
@@ -82,9 +76,12 @@ def smarter_custom_flow_control(net):
     quietRun('sudo ovs-ofctl add-flow s3 dl_dst={},actions=output:2'.format(net.getNodeByName('h3').MAC()))
 
 
+
 if __name__ == '__main__':
     setLogLevel('info')
     quietRun('sudo mn -c')
+    packet_loss = 5
+
     # question 1
     print("\n#------------------ Question1 ------------------#\n\n")
     topo = MyTopo()
@@ -93,7 +90,7 @@ if __name__ == '__main__':
 
     # question 2
     print("\n#------------------ Question2 ------------------#\n\n")
-    packet_loss = 0.05
+
     topo = MyTopo(packet_loss=packet_loss)
     perf_test(topo)
     print("\n\n#-----------------------------------------------#\n")
@@ -105,18 +102,9 @@ if __name__ == '__main__':
     ping_test(topo)
     print("\n\n#-----------------------------------------------#\n")
 
-    # solution1: add flow rules
-    packet_loss = 0.05
-    print("\n#------------------ Solution1 ------------------#\n\n")
+    # solution: add flow rules
+    print("\n#------------------ Solution ------------------#\n\n")
     additional_link = True
     topo = MyTopo(packet_loss=packet_loss, additional_link=additional_link)
     ping_test(topo, algorithm=custom_flow_control)
-    print("\n\n#-----------------------------------------------#\n")
-
-    # solution2: add flow rules
-    packet_loss = 0.05
-    print("\n#------------------ Solution2 ------------------#\n\n")
-    additional_link = True
-    topo = MyTopo(packet_loss=packet_loss, additional_link=additional_link)
-    ping_test(topo, algorithm=smarter_custom_flow_control)
     print("\n\n#-----------------------------------------------#\n")
