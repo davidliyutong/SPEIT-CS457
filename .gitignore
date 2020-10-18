@@ -1,1 +1,9 @@
 .idea
+*.toc
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.blb
+*.blg
+*.bbl

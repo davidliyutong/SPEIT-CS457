@@ -1,0 +1,56 @@
+//    PeerDaemon PD{};
+//
+//    sockaddr_in A1 = GenRemoteAddr("127.0.0.1", 18888);
+//    sockaddr_in A2 = GenRemoteAddr("127.0.0.1", 18889);
+//    sockaddr_in A3 = GenRemoteAddr("127.0.0.1", 18890);
+//    PD.m_AddPeer((sockaddr &) A1);
+//    PD.m_AddPeer((sockaddr &) A2);
+//    PD.m_AddPeer((sockaddr &) A3);
+//    string res1 = PD.m_QueryPeer((sockaddr &) A1);
+//    string res2 = PD.m_QueryPeer((sockaddr &) A2);
+//    string res3 = PD.m_QueryPeer((sockaddr &) A3);
+//    vector<sockaddr_in> Dec12 = StringToSockInfos16(res3);
+//    return 0;
+
+//    sockaddr_in Target = GenRemoteAddr("127.0.0.1", 18890);
+//    int Sock = GenNewTCPSock();
+//    int ret = connect(Sock, (sockaddr *) &Target, sizeof(Target));
+//    if(ret == -1) {
+//        exit(1);
+//    }
+//
+//    char SendBuf[SENDBUFFLEN];
+//    char RecvBuf[RECVBUFFLEN];
+//    memset(SendBuf, 0, CRTLMSGLEN);
+//
+//    SendBuf[0] = 'R';
+//    SendBuf[CRTLMSGLEN - 1] = '\n';
+//
+//    send(Sock, &SendBuf, sizeof(char) * CRTLMSGLEN, 0);
+//    recv(Sock, &RecvBuf, sizeof(char ) * CRTLMSGLEN,0);
+//
+//    SendBuf[0] = 'P';
+//    SendBuf[CRTLMSGLEN - 1] = '\n';
+//
+//    send(Sock, &SendBuf, sizeof(char) * CRTLMSGLEN, 0);
+//    SetSockSendTimeout(0,100, Sock);
+//    recv(Sock, & RecvBuf, sizeof(char ) * CRTLMSGLEN,0);
+//
+//    uint64_t nPeerInfoLen = CharToUint64(&RecvBuf[1]);
+//    uint64_t nByteLeft = nPeerInfoLen;
+//    int nRecvLen;
+//    string sPeerInfo;
+//
+//    while (nByteLeft > 0) {
+//        if (nByteLeft >= RECVBUFFLEN) {
+//            nRecvLen = recv(Sock, RecvBuf, sizeof(char) * RECVBUFFLEN, 0);
+//        } else {
+//            nRecvLen = recv(Sock, RecvBuf, sizeof(char) * nByteLeft, 0);
+//        }
+//        if (nRecvLen > 0) {
+//            sPeerInfo.append(RecvBuf, nRecvLen);
+//            nByteLeft -= nRecvLen;
+//        }
+//    }
+//
+//    vector<sockaddr_in> PeerInfo = StringToSockInfos16(sPeerInfo);

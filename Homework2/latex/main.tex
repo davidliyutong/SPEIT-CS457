@@ -1,0 +1,109 @@
+%Copyright 2020, LI Yutong
+\documentclass{article}
+\usepackage{geometry}
+\geometry{a4paper}
+\geometry{left=3.18cm,right=3.18cm}
+
+\usepackage{caption}
+\usepackage{bicaption}
+\captionsetup[figure]{labelsep=space}
+\captionsetup[table]{labelsep=space}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{pythonhighlight}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage[slantfont,boldfont]{xeCJK}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{enumitem}	
+\usepackage{amsmath}
+\usepackage{tocloft}
+\usepackage{color}
+\usepackage{setspace}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{sty/mcode}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.7em}
+\setlength{\cftbeforesecskip}{10pt}
+\pagestyle{fancy}
+\newfloat{code}{H}{eqn}
+\setcounter{tocdepth}{2}
+\hypersetup{colorlinks=true,linkcolor=black}
+
+% Personal Information defined hear
+\def \myTitle {Laboratory Report of Computer Networks}
+\def \myAuthor {Yutong LI 厉宇桐}
+\def \myCollege {SJTU-ParisTech}
+\def \myIDNumber {517261910017}
+
+%set pdf metadata
+\title{\myTitle}
+\author{\myAuthor}
+\date{\today}
+
+\lhead{\myCollege} 
+\chead{}
+\rhead{\myAuthor}
+
+\begin{document}
+	\thispagestyle{empty}
+	
+	% Cover images
+	\begin{center}
+		\includegraphics{cover1}
+		\hspace{186pt}
+		\includegraphics{cover2}
+	\end{center}
+	\vspace{88pt}
+	
+	% Title
+	\begin{center}
+		\scalebox{0.7}{\Huge{\textbf{\myTitle}}}
+	\end{center}
+	\begin{center}
+		\scalebox{0.6}{\textcolor[RGB]{17,148,149}{\Huge{\textbf{Lab I. Signal Expressing and Sampling Theorem}}}}
+	\end{center}
+	\vspace{88pt}
+	
+	% Author information
+	\begin{center}
+		\Large{
+			\begin{tabular}{ll}
+					Name:& \myAuthor \\ [10pt]
+					No.:& \myIDNumber \\ [10pt]
+					Date:& \number\year /\number\month /\number\day \\ [10pt]
+					Score:& \_\_\_\_\_\_\_\_\_ \\ [10pt]
+			\end{tabular}
+		}
+	\end{center}
+	\vspace{88pt}
+
+	\begin{center}
+		\Large{\textbf{SHANGHAI JIAOTONG UNIVERSITY}}
+		
+		\Large{\textbf{SJTU-ParisTech Elite Institute of Technology}}
+	\end{center}
+	\vspace{1em}
+	
+	%Table of contents
+	\vspace{1em} \normalsize
+	\clearpage
+	\thispagestyle{empty}
+	\tableofcontents
+	\clearpage
+	
+	\input{contents/introduction}
+	\input{contents/body}
+	\input{contents/summary}
+	\input{contents/appendix}
+	\bibliography{main}
+	\bibliographystyle{plain}
+\end{document}
