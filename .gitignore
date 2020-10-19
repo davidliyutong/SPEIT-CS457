@@ -7,3 +7,5 @@
 *.blb
 *.blg
 *.bbl
+*.DS_Store
+.DS_Store
